@@ -1,6 +1,18 @@
 from django.db import transaction
 from rest_framework import serializers
-from .models import Product, Order, OrderItem
+from .models import Product, Order, OrderItem, User
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User()
+        fields = ("id", "username", "email", "is_superuser", "email", "date_joined")
+
+
+class UserOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User()
+        fields = ("id", "username", "email", "date_joined")
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -74,7 +86,6 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         fields = (
             "order_id",
             "user",
-            # "user_name",
             "status",
             "items",
         )
@@ -86,8 +97,8 @@ class OrderSerializer(serializers.ModelSerializer):
     order_id = serializers.UUIDField(read_only=True)
     # writable nested representations restapi wiki
     items = OrderItemSerializer(many=True, read_only=True)
+    user = UserOrderSerializer()  # display more fields detail, not only PK relationship
     total_price = serializers.SerializerMethodField(method_name="total")
-    # user_name = serializers.CharField(source="user.name")
 
     def total(self, obj):
         order_items = obj.items.all()
@@ -99,7 +110,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "order_id",
             "created_at",
             "user",
-            # "user_name",
             "status",
             "items",
             "total_price",

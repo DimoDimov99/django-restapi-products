@@ -14,6 +14,7 @@ urlpatterns = [
         "api/v1/product/<int:product_id>/",
         views.ProductRetrieveUpdateDestroyAPIView.as_view(),
     ),
+    path("api/v1/users/", views.UserListView.as_view()),
     # path("api/v1/orders/", views.orders_list),
     # path("api/v1/orders/", views.OrdersListAPIView.as_view()),
     # path(

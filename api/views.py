@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from api.filters import InStockFilterBackend, OrderFilter, ProductFilter
-from api.models import Order, OrderItem, Product
+from api.models import Order, OrderItem, Product, User
 
 # from django.shortcuts import get_object_or_404
 from api.serializers import (
@@ -21,6 +21,7 @@ from api.serializers import (
     ProductInfoSerializer,
     ProductSerializer,
     OrderCreateSerializer,
+    UserSerializer,
 )
 
 from rest_framework.decorators import action
@@ -221,3 +222,9 @@ class ProductsInfoAPIView(APIView):
             }
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    pagination_class = None

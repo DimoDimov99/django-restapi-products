@@ -25,6 +25,9 @@ from api.serializers import (
 )
 
 from rest_framework.decorators import action
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 
 # @api_view(["GET"])
 # def products_list(request):
@@ -75,11 +78,21 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
     ordering_fields = ["name", "price", "stock"]
     # https://www.django-rest-framework.org/api-guide/pagination/#cursorpagination
     pagination_class = PageNumberPagination
-    pagination_class.page_size = 2
+    pagination_class.page_size = 6
     # rename name of paginator
     # pagination_class.page_query_param = "dimo"
     pagination_class.page_size_query_param = "size"
     pagination_class.max_page_size = 9
+
+    @method_decorator(cache_page(60 * 15, key_prefix="cached_product_list"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        import time
+
+        time.sleep(2)
+        return super().get_queryset()
 
     def get_permissions(self):
         # Everyone can get access to all available products
@@ -170,6 +183,11 @@ class OrderViewSet(viewsets.ModelViewSet):
     filterset_class = OrderFilter
     filter_backends = [DjangoFilterBackend]
 
+    @method_decorator(cache_page(60 * 15, key_prefix="cached_order_list"))
+    @method_decorator(vary_on_headers("Authorization"))
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -180,6 +198,10 @@ class OrderViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
     def get_queryset(self):
+        # display only current user orders
+        # qs = super().get_queryset()
+        # qs = qs.filter(user=self.request.user)
+        # return qs
         qs = super().get_queryset()
         if not self.request.user.is_staff:
             qs = qs.filter(user=self.request.user)

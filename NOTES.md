@@ -9,3 +9,9 @@ Resources:
 - https://www.cdrf.co/ - Detailed descriptions, with full methods and attributes, for each of Django REST Framework's class-based views and serializers.
 - jwt.io
 - research cursor paginator
+- Inside connected redis docker instance:
+```
+redis-cli -n 1 - connects to redis DB instance
+KEYS * - returns all cached keys, blocking operation
+GET <key_name> - returns value of the given key
+```

@@ -54,6 +54,11 @@ class OrderCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # pops out the items out of the validated_data
+        # think about cases, where user do not send data
+        if validated_data.get("items", None) == None:
+            raise serializers.ValidationError(
+                detail={"details": "Invalid POST request. Product items are missing!"},
+            )
         order_item_data = validated_data.pop("items")
         with transaction.atomic():
             # order do not need order_items, they can be created later

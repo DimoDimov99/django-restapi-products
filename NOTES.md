@@ -16,3 +16,5 @@ KEYS * - returns all cached keys, blocking operation
 GET <key_name> - returns value of the given key
 ```
 - python3 manage.py test api.tests.UserOrderTestCase.test_user_order_api_retrieves_only_auth_user_orders
+- https://stackoverflow.com/questions/179123/how-to-modify-existing-unpushed-commit-messages
+- python3 manage.py show_urls

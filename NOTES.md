@@ -15,3 +15,4 @@ redis-cli -n 1 - connects to redis DB instance
 KEYS * - returns all cached keys, blocking operation
 GET <key_name> - returns value of the given key
 ```
+- python3 manage.py test api.tests.UserOrderTestCase.test_user_order_api_retrieves_only_auth_user_orders

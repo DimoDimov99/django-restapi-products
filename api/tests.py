@@ -19,14 +19,18 @@ class UserOrderTestCase(TestCase):
     def test_user_order_api_retrieves_only_auth_user_orders(self):
         dummy_user_01 = User.objects.get(username="user_01")
         self.client.force_login(dummy_user_01)
-        response = self.client.get(reverse("user-orders"))
+        response = self.client.get(reverse("user-orders-list"))
 
         assert response.status_code == status.HTTP_200_OK
         orders = response.json()
-        self.assertTrue(all(order["user"] == dummy_user_01.id for order in orders))
+        results = orders["results"]
+        self.assertTrue(
+            all(user["user"]["username"] == dummy_user_01.username for user in results)
+        )
+        # self.assertTrue(all(order["user"] == dummy_user_01.id for order in orders))
 
     def test_user_order_list_unath(self):
-        response = self.client.get(reverse("user-orders"))
+        response = self.client.get(reverse("user-orders-list"))
         """
         The request was successfully authenticated, but permission was denied. — An HTTP 403 Forbidden response will be returned.
         The request was not successfully authenticated, and the highest priority authentication class does not use WWW-Authenticate headers. — An HTTP 403 Forbidden response will be returned.

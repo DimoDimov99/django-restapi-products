@@ -18,12 +18,7 @@ class UserOrderSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = (
-            "description",
-            "name",
-            "price",
-            "stock",
-        )
+        fields = ("id", "description", "name", "price", "stock", "image")
 
     def validate_stock_price(self, value):
         if value <= 0:

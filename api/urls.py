@@ -24,5 +24,5 @@ urlpatterns = [
 ]
 
 router = DefaultRouter()
-router.register("api/v1/orders", views.OrderViewSet)
+router.register("api/v1/orders", views.OrderViewSet, basename="user-orders")
 urlpatterns += router.urls

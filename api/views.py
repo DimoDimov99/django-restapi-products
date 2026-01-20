@@ -57,7 +57,7 @@ from django.views.decorators.vary import vary_on_headers
 
 # customizing permissions
 class ProductListCreateAPIView(generics.ListCreateAPIView):
-
+    throttle_scope = "products"
     # UnorderedObjectListWarning fix
     # queryset = Product.objects.all() -> queryset = Product.objects.order_by("pk")
     queryset = Product.objects.order_by("pk")
@@ -176,6 +176,7 @@ class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
+    throttle_scope = "orders"
     queryset = Order.objects.prefetch_related("items", "items__product")
     serializer_class = OrderSerializer
     # OrderCreateSerializer on POST

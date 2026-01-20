@@ -155,6 +155,21 @@ REST_FRAMEWORK = {
     # https://www.django-rest-framework.org/api-guide/pagination/#pagenumberpagination
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 6,
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        # "rest_framework.throttling.UserRateThrottle",
+        # "api.throttles.BurstRateThrottle",
+        # "api.throttles.SustainedRateThrottle",
+        "rest_framework.throttling.ScopedRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "2/minute",
+        # "user": "3/minute",
+        "burst": "10/min",
+        "sustained": "15/day",
+        "orders": "10/min",
+        "products": "10/min",
+    },
 }
 
 SPECTACULAR_SETTINGS = {
